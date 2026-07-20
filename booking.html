@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reserve a parking slot at the Smart Parking System. Rate: ₹120/hour. Designed by Akshay Krishna, Bharath, Hari Haran.">
+  <title>Book Parking Slot | Smart Parking System</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    @media (max-width: 900px) {
+      .booking-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .slot-selection-panel {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .booking-slot-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--border-radius-md);
+      padding: 15px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-align: center;
+    }
+    .booking-slot-card.available:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+      background: rgba(0, 245, 212, 0.03);
+    }
+    .booking-slot-card.selected {
+      border-color: var(--accent-primary) !important;
+      background: rgba(0, 245, 212, 0.08) !important;
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.15);
+    }
+    .booking-slot-card.occupied {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(255, 23, 68, 0.02);
+    }
+    .booking-slot-card.reserved {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba(255, 214, 0, 0.02);
+    }
+    .slot-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header>
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-5h14v5zM7.5 13c-.83 0-1.5.67-1.5 1.5S6.67 16 7.5 16s1.5-.67 1.5-1.5S8.33 13 7.5 13zm9 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1 style="font-size: 1.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #fff; text-shadow: 0 0 15px rgba(0, 245, 212, 0.6), 0 0 5px var(--accent-primary); font-family: var(--font-main);">Smart Car Parking System</h1>
+          <span style="font-family: var(--font-mono); color: var(--accent-primary); font-size: 0.72rem; letter-spacing: 2px;">IoT INTEGRATED PLATFORM</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">Dashboard</a>
+        <a href="booking.html" class="nav-item active">Book Slot</a>
+        <a href="facilities.html" class="nav-item">Surveillance CCTV</a>
+        <a href="owner.html" class="nav-item" style="color: var(--accent-secondary); border: 1px solid rgba(162,114,255,0.25); background: rgba(162,114,255,0.05); border-radius: 4px; padding: 6px 12px; transition: var(--transition-smooth);">Owner Portal 🔒</a>
+      </nav>
+
+      <div class="connection-badge" style="display:flex; align-items:center;">
+        <span class="badge-dot pulsing"></span>
+        <span>Secure Gateway</span>
+        <span style="margin-left: 15px; border-left: 1px solid rgba(255,255,255,0.15); padding-left: 15px; font-family: var(--font-mono); color: var(--accent-primary); font-weight: 800; font-size: 0.8rem;" id="ist-clock">IST: 12:00:00 PM</span>
+      </div>
+    </header>
+
+    <!-- Main Section -->
+    <div class="booking-grid">
+      
+      <!-- Left Panel: Slot Selection Grid -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="card-title-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"/></svg>
+            <span>Select Available Parking Slot</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--accent-primary); font-weight:700">₹120 / Hour</span>
+        </div>
+        
+        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 20px;">Click on any green available parking bay below to secure your booking instantly.</p>
+        
+        <div class="slot-selection-panel" id="slots-selector-container">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+
+      <!-- Right Panel: Booking Reservation Form -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="card-title-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+            <span>Reservation Details Form</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--status-available); font-weight:700">SECURE TRANSACTION</span>
+        </div>
+
+        <div class="modal-form-group">
+          <label>Selected Slot Bay</label>
+          <input type="text" class="modal-input" id="booking-slot-display" readonly value="None Selected" style="font-weight:bold; color:var(--accent-primary);">
+        </div>
+
+        <div class="modal-form-group">
+          <label>Full Name of Owner</label>
+          <input type="text" class="modal-input" id="booking-name-input" placeholder="e.g. Akshay Krishna">
+        </div>
+
+        <div class="modal-form-group">
+          <label>Vehicle License Plate Number</label>
+          <input type="text" class="modal-input" id="booking-plate-input" placeholder="e.g. KA-01-MJ-9988" style="text-transform: uppercase;">
+        </div>
+
+        <div class="modal-form-group">
+          <label>Phone Number</label>
+          <div style="display:flex; gap:10px;">
+            <input type="tel" class="modal-input" id="booking-phone-input" placeholder="e.g. 9876543210" pattern="[0-9]{10}" style="flex: 2;">
+            <button class="btn" id="btn-send-otp" style="font-size:0.75rem; padding: 6px 12px; flex: 1;" type="button">Send OTP</button>
+          </div>
+        </div>
+
+        <!-- Verification OTP container -->
+        <div id="otp-verification-section" style="margin: 10px 0; padding: 12px; background: rgba(0,245,212,0.03); border: 1px solid rgba(0,245,212,0.15); border-radius: var(--border-radius-md); display:none; flex-direction:column; gap:8px;">
+          <label style="font-size:0.72rem; color:var(--text-secondary); display:block; text-align:center;">Enter 4-Digit Verification Code</label>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input type="text" id="otp-code-input" class="modal-input" placeholder="XXXX" maxlength="4" style="text-align:center; font-family:var(--font-mono); font-size:0.9rem; padding:6px; flex: 2;">
+            <button class="btn" id="btn-verify-otp" style="font-size:0.75rem; padding: 6px 12px; flex: 1;" type="button">Verify Code</button>
+          </div>
+          <span id="otp-status-label" style="font-size:0.7rem; font-weight:700; color:var(--status-occupied); display:block; text-align:center;">Awaiting Verification Code</span>
+        </div>
+
+        <div class="modal-form-group">
+          <label>Estimated Booking Duration (Minutes)</label>
+          <input type="number" class="modal-input" id="booking-duration-input" min="5" max="1440" value="30">
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.15); padding:15px; border-radius:var(--border-radius-md); border:1px solid rgba(255,255,255,0.03); margin-top:20px;">
+          <div>
+            <span style="display:block; font-size:0.75rem; color:var(--text-secondary);">Total Tariff:</span>
+            <span id="booking-total-price" style="font-size:1.4rem; font-weight:800; color:var(--accent-secondary); font-family:var(--font-mono)">₹60</span>
+          </div>
+          <button class="btn" id="btn-submit-booking" style="font-size:0.9rem; padding:10px 20px;">Lock Reservation</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Smart Car Parking System Platform &bull; Developed by <a href="index.html#creator-spotlight">Akshay Krishna, Bharath & Hari Haran</a> &bull; &copy; 2026</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // State lists
+    let slots = [];
+    let selectedSlotId = null;
+
+    // Load from localStorage or defaults
+    function loadSlots() {
+      const saved = localStorage.getItem('smart_parking_slots');
+      if (saved) {
+        slots = JSON.parse(saved);
+      } else {
+        slots = [
+          { id: 'A1', status: 'available', distance: 150, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'A2', status: 'available', distance: 162, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'A3', status: 'available', distance: 145, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'A4', status: 'available', distance: 155, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'B1', status: 'available', distance: 170, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'B2', status: 'available', distance: 158, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'B3', status: 'available', distance: 160, occupant: '', plate: '', duration: 0, occupiedAt: null },
+          { id: 'B4', status: 'available', distance: 165, occupant: '', plate: '', duration: 0, occupiedAt: null, isEvSlot: true, evBatteryPct: 0 },
+        ];
+      }
+    }
+
+    function renderSlots() {
+      const container = document.getElementById('slots-selector-container');
+      container.innerHTML = '';
+      
+      slots.forEach(slot => {
+        const card = document.createElement('div');
+        card.className = `booking-slot-card ${slot.status}`;
+        
+        let statusLabel = 'Available';
+        let bgStyle = 'background: rgba(0, 230, 118, 0.1); color: var(--status-available);';
+        
+        if (slot.status === 'occupied') {
+          statusLabel = 'Occupied';
+          bgStyle = 'background: rgba(255, 23, 68, 0.1); color: var(--status-occupied);';
+        } else if (slot.status === 'reserved') {
+          statusLabel = 'Reserved';
+          bgStyle = 'background: rgba(255, 214, 0, 0.1); color: var(--status-reserved);';
+        }
+
+        const evTag = slot.isEvSlot ? '<span style="color:#00e676; font-size:0.6rem; display:block;">⚡ EV CHARGING STATION</span>' : '';
+
+        card.innerHTML = `
+          <h4 style="color:#fff; font-size:1.1rem; margin-bottom:2px;">Slot ${slot.id}</h4>
+          ${evTag}
+          <span class="slot-badge" style="${bgStyle}">${statusLabel}</span>
+        `;
+
+        if (slot.status === 'available') {
+          card.addEventListener('click', () => {
+            document.querySelectorAll('.booking-slot-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedSlotId = slot.id;
+            document.getElementById('booking-slot-display').value = `Slot ${slot.id}`;
+            calculatePrice();
+          });
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    function calculatePrice() {
+      const mins = parseInt(document.getElementById('booking-duration-input').value) || 10;
+      const total = mins * 2;
+      document.getElementById('booking-total-price').textContent = `₹${total}`;
+    }
+
+    document.getElementById('booking-duration-input').addEventListener('input', calculatePrice);
+
+    // Enforce uppercase typing on License Plate Number in real-time
+    const plateInput = document.getElementById('booking-plate-input');
+    plateInput.addEventListener('input', () => {
+      plateInput.value = plateInput.value.toUpperCase();
+    });
+
+    // OTP Verification logic
+    let generatedOtp = null;
+    let isOtpVerified = false;
+
+    const phoneInput = document.getElementById('booking-phone-input');
+    const otpSection = document.getElementById('otp-verification-section');
+    const otpStatusLabel = document.getElementById('otp-status-label');
+    const otpCodeInput = document.getElementById('otp-code-input');
+
+    document.getElementById('btn-send-otp').addEventListener('click', () => {
+      const phoneVal = phoneInput.value.trim();
+      if (!phoneVal || phoneVal.length < 10) {
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+      }
+      
+      // Generate 4-digit mock OTP
+      generatedOtp = String(Math.floor(1000 + Math.random() * 9000));
+      isOtpVerified = false;
+      
+      alert(`[SMS GATEWAY SIMULATOR]\nSending verification text to +91 ${phoneVal}...\n\nYour 4-Digit OTP Code is: ${generatedOtp}`);
+      
+      otpSection.style.display = 'flex';
+      otpStatusLabel.textContent = 'Awaiting OTP input code';
+      otpStatusLabel.style.color = 'var(--status-reserved)';
+    });
+
+    document.getElementById('btn-verify-otp').addEventListener('click', () => {
+      const enteredCode = otpCodeInput.value.trim();
+      if (!enteredCode) {
+        alert('Please enter the verification code.');
+        return;
+      }
+      if (enteredCode === generatedOtp) {
+        isOtpVerified = true;
+        otpStatusLabel.textContent = '✓ Phone Verified Successfully!';
+        otpStatusLabel.style.color = 'var(--status-available)';
+        otpCodeInput.disabled = true;
+        document.getElementById('btn-verify-otp').disabled = true;
+        phoneInput.disabled = true;
+        document.getElementById('btn-send-otp').disabled = true;
+      } else {
+        isOtpVerified = false;
+        otpStatusLabel.textContent = '❌ Invalid Code. Please retry.';
+        otpStatusLabel.style.color = 'var(--status-occupied)';
+      }
+    });
+
+    // Form submission
+    document.getElementById('btn-submit-booking').addEventListener('click', () => {
+      if (!selectedSlotId) {
+        alert('Please select an available parking slot bay from the left panel.');
+        return;
+      }
+      const name = document.getElementById('booking-name-input').value.trim();
+      const plate = document.getElementById('booking-plate-input').value.trim();
+      const phone = phoneInput.value.trim();
+      const duration = parseInt(document.getElementById('booking-duration-input').value) || 30;
+
+      if (!name || !plate || !phone) {
+        alert('Please fill out your Name, Plate Number, and Phone Number to confirm.');
+        return;
+      }
+
+      if (!isOtpVerified) {
+        alert('Please complete the Phone verification with the OTP code first.');
+        return;
+      }
+
+      const slot = slots.find(s => s.id === selectedSlotId);
+      if (slot && slot.status === 'available') {
+        slot.status = 'reserved';
+        slot.occupant = name;
+        slot.plate = plate;
+        slot.phone = phone; // Store phone number on slot state
+        slot.duration = duration;
+        slot.occupiedAt = null; // not occupied yet, just booked
+        slot.reservedAt = new Date().getTime(); // timestamp for no-show buffer timer
+        slot.carImage = 'car' + (Math.floor(Math.random() * 3) + 1) + '.jpg';
+        
+        // Sync blockchain transaction log in localStorage
+        const blockchainData = localStorage.getItem('smart_blockchain_logs') || JSON.stringify([
+          { block: 4489910, hash: '0x9b5fca8d30d12e5c8e8d8d6469616e6462726f74', method: 'Reserve NFT', status: 'CONFIRMED' },
+          { block: 4489912, hash: '0x2a1c0d29d38c64ea9bdf54627725916f1a8de6a9', method: 'Settle Bill', status: 'CONFIRMED' }
+        ]);
+        const blockchainLogs = JSON.parse(blockchainData);
+        
+        const lastBlock = (blockchainLogs && blockchainLogs.length > 0) ? blockchainLogs[blockchainLogs.length - 1].block : 4489912;
+        const nextBlock = lastBlock + Math.floor(Math.random() * 3) + 1;
+        const tempTx = '0x' + Array.from({length: 40}, () => '0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+        
+        blockchainLogs.push({
+          block: nextBlock,
+          hash: tempTx,
+          method: 'Mint Ticket NFT',
+          status: 'CONFIRMED'
+        });
+
+        // Write both back
+        localStorage.setItem('smart_parking_slots', JSON.stringify(slots));
+        localStorage.setItem('smart_blockchain_logs', JSON.stringify(blockchainLogs));
+        
+        // Add checkout log flag in localStorage for dashboard print logs
+        localStorage.setItem('new_booking_event', `[RESERVATION] Slot ${slot.id} booked by ${name} via web portal. NFT Mint Tx: ${tempTx.substring(0,10)}...`);
+
+        alert(`Success! Slot ${selectedSlotId} has been reserved. Ticket NFT has been minted to blockchain.\nTotal: ₹${duration * 2}. Redirecting to dashboard...`);
+        window.location.href = 'index.html';
+      } else {
+        alert(`Error: Slot ${selectedSlotId} is no longer available (current state: ${slot ? slot.status : 'unknown'}). Please choose another slot.`);
+      }
+    });
+
+    // Boot
+    loadSlots();
+    renderSlots();
+
+    // IST Ticker Clock
+    function updateISTClock() {
+      const clockEl = document.getElementById('ist-clock');
+      if (clockEl) {
+        const now = new Date();
+        clockEl.textContent = 'IST: ' + now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+    }
+    updateISTClock();
+    setInterval(updateISTClock, 1000);
+  </script>
+</body>
+</html>

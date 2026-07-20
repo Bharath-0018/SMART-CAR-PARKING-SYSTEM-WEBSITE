@@ -1,0 +1,1700 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg-color: #02090f;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #03212b 0%, #02090f 85%);
+  --panel-bg: rgba(2, 20, 28, 0.55);
+  --panel-border: rgba(255, 255, 255, 0.05);
+  --panel-border-active: rgba(0, 245, 212, 0.3);
+  
+  /* Brand Accents */
+  --accent-primary: #00F5D4;
+  --accent-secondary: #a272ff;
+  --accent-gradient: linear-gradient(135deg, #00F5D4 0%, #a272ff 100%);
+  --accent-gradient-glow: rgba(0, 245, 212, 0.3);
+  
+  /* Status Colors */
+  --status-available: #00E676;
+  --status-available-glow: rgba(0, 230, 118, 0.3);
+  --status-occupied: #FF1744;
+  --status-occupied-glow: rgba(255, 23, 68, 0.3);
+  --status-reserved: #FFD600;
+  --status-reserved-glow: rgba(255, 214, 0, 0.3);
+  --status-offline: #526372;
+  
+  /* Typography Colors */
+  --text-primary: #E0F2F1;
+  --text-secondary: #90A4AE;
+  --text-muted: #546E7A;
+  
+  /* Fonts */
+  --font-main: 'Outfit', 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --border-radius-lg: 16px;
+  --border-radius-md: 10px;
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  background-image: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.5;
+  padding-bottom: 60px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('images/smart_parking_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08; /* Subtle glowing ambient watermark background */
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(6, 2, 15, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Layout Containers */
+.app-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+
+/* Header & Navigation */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--border-radius-md);
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--accent-gradient-glow);
+}
+
+.logo-icon svg {
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+}
+
+.logo-text h1 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-text span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: -2px;
+}
+
+.connection-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid var(--panel-border);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--status-available);
+  box-shadow: 0 0 10px var(--status-available);
+  display: inline-block;
+}
+
+.badge-dot.pulsing {
+  animation: pulse-dot 1.5s infinite alternate;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--status-available); }
+}
+
+/* Creator Profile Showcase */
+.creator-section {
+  background: linear-gradient(135deg, rgba(30, 16, 50, 0.6) 0%, rgba(15, 8, 28, 0.6) 100%);
+  border: 1px solid var(--panel-border);
+  padding: 24px 30px;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+}
+
+.creator-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-gradient);
+}
+
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.creator-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e0d38 0%, #3a1c6e 100%);
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.creator-details h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.creator-details .role-badge {
+  background: rgba(255, 168, 52, 0.1);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(255, 168, 52, 0.25);
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.creator-description {
+  margin-top: 6px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+.hardware-pill-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.hw-pill {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+}
+
+.project-stats-compact {
+  display: flex;
+  gap: 30px;
+  text-align: right;
+}
+
+.stat-item-compact .stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.stat-item-compact .stat-val {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-mono);
+}
+
+/* Glass Cards and Layout Grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.9fr 1.1fr;
+  gap: 30px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.glass-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  border-color: var(--panel-border-active);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 107, 107, 0.03);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 12px;
+}
+
+.card-title-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--accent-primary);
+}
+
+/* Metrics Dashboard */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-card {
+  background: rgba(22, 12, 38, 0.3);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-gradient);
+  opacity: 0.6;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  background: rgba(22, 12, 38, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.metric-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metric-icon-wrapper svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.metric-card:hover .metric-icon-wrapper svg {
+  fill: var(--accent-primary);
+  transform: scale(1.1);
+}
+
+.metric-info h3 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+/* Parking Grid Visualizer */
+.parking-grid-container {
+  position: relative;
+  background: rgba(6, 2, 15, 0.3);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.parking-lanes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .parking-lanes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.parking-slot {
+  background: rgba(10, 5, 20, 0.7);
+  border: 2px dashed rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  min-height: 160px;
+  justify-content: space-between;
+}
+
+.parking-slot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top-left-radius: var(--border-radius-md);
+  border-top-right-radius: var(--border-radius-md);
+  background: var(--text-muted);
+}
+
+.parking-slot.available::before {
+  background: var(--status-available);
+}
+
+.parking-slot.occupied::before {
+  background: var(--status-occupied);
+}
+
+.parking-slot.reserved::before {
+  background: var(--status-reserved);
+}
+
+.parking-slot:hover {
+  background: rgba(22, 12, 38, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.parking-slot.available:hover {
+  box-shadow: 0 5px 20px var(--status-available-glow);
+}
+
+.parking-slot.occupied:hover {
+  box-shadow: 0 5px 20px var(--status-occupied-glow);
+}
+
+.parking-slot.reserved:hover {
+  box-shadow: 0 5px 20px var(--status-reserved-glow);
+}
+
+.slot-id {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  z-index: 1;
+}
+
+.slot-status-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.available .slot-status-label {
+  background: rgba(0, 245, 212, 0.1);
+  color: var(--status-available);
+  border: 1px solid rgba(0, 245, 212, 0.2);
+}
+
+.occupied .slot-status-label {
+  background: rgba(255, 63, 129, 0.1);
+  color: var(--status-occupied);
+  border: 1px solid rgba(255, 63, 129, 0.2);
+}
+
+.reserved .slot-status-label {
+  background: rgba(255, 168, 52, 0.1);
+  color: var(--status-reserved);
+  border: 1px solid rgba(255, 168, 52, 0.2);
+}
+
+.slot-visual {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.car-icon {
+  width: 44px;
+  height: 44px;
+  fill: var(--text-muted);
+  opacity: 0.15;
+  transition: var(--transition-smooth);
+}
+
+.occupied .car-icon {
+  fill: var(--status-occupied);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 8px var(--status-occupied-glow));
+  animation: car-slide 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reserved .car-icon {
+  fill: var(--status-reserved);
+  opacity: 0.4;
+  animation: float-car 2s ease-in-out infinite alternate;
+}
+
+@keyframes car-slide {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 0.95; }
+}
+
+@keyframes float-car {
+  from { transform: translateY(0px) scale(0.95); }
+  to { transform: translateY(-4px) scale(1); }
+}
+
+.slot-sensor-reading {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.slot-sensor-reading span {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Reserve CTA */
+.slot-action {
+  font-size: 0.72rem;
+  color: var(--accent-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  opacity: 0;
+  transition: var(--transition-smooth);
+  pointer-events: none;
+}
+
+.available:hover .slot-action {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* IoT Simulator Panel (Side Columns) */
+.simulator-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.control-group {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.control-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control-label span.badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--accent-secondary);
+}
+
+.sensor-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sensor-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sensor-slider-row label {
+  width: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sensor-slider {
+  flex-grow: 1;
+  -webkit-appearance: none;
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.sensor-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-gradient-glow);
+  transition: var(--transition-smooth);
+}
+
+.sensor-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.sensor-val-display {
+  width: 45px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+/* RFID / Gate Simulator Visualizer */
+.gate-sim-visualizer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(6, 2, 15, 0.4);
+  padding: 20px;
+  border-radius: var(--border-radius-md);
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.rfid-scanner-box {
+  width: 80px;
+  height: 110px;
+  background: #110920;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.rfid-scanner-box:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.15);
+}
+
+.rfid-indicator-leds {
+  display: flex;
+  gap: 8px;
+}
+
+.led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #332448;
+}
+
+.led.green.active {
+  background: var(--status-available);
+  box-shadow: 0 0 8px var(--status-available);
+}
+
+.led.red.active {
+  background: var(--status-occupied);
+  box-shadow: 0 0 8px var(--status-occupied);
+}
+
+.rfid-logo {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.rfid-swipe-zone {
+  width: 100%;
+  height: 40px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.02) 6px,
+    rgba(255, 255, 255, 0.05) 6px,
+    rgba(255, 255, 255, 0.05) 12px
+  );
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.rfid-scanner-box.scanning {
+  animation: scan-flicker 0.4s ease-in-out;
+}
+
+@keyframes scan-flicker {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.05); }
+  50% { border-color: var(--status-available); box-shadow: 0 0 20px var(--status-available); }
+}
+
+/* Servo Gate Graphic */
+.gate-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.servo-gate-graphic {
+  position: relative;
+  width: 140px;
+  height: 90px;
+}
+
+.gate-post {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 24px;
+  height: 60px;
+  background: #25163f;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gate-servo-axle {
+  position: absolute;
+  bottom: 40px;
+  left: 27px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  z-index: 2;
+  box-shadow: 0 0 8px var(--status-reserved);
+}
+
+.gate-barrier-arm {
+  position: absolute;
+  bottom: 42px;
+  left: 32px;
+  width: 90px;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    #ff3b30,
+    #ff3b30 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  );
+  border-radius: 3px;
+  transform-origin: 0px 3px;
+  transform: rotate(0deg);
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.gate-barrier-arm.open {
+  transform: rotate(-90deg);
+}
+
+.gate-status-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--status-occupied);
+  letter-spacing: 0.5px;
+}
+
+.gate-status-text.open {
+  color: var(--status-available);
+}
+
+/* RFID Swiper input form */
+.rfid-control-input {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.rfid-input-field {
+  flex-grow: 1;
+  background: rgba(6, 2, 15, 0.5);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.rfid-input-field:focus {
+  border-color: var(--accent-primary);
+}
+
+.btn {
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-md);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: var(--font-main);
+}
+
+.btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 15px var(--accent-gradient-glow);
+}
+
+/* Serial Monitor Terminal Console */
+.serial-monitor-card {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.terminal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.terminal-dot.clear:hover {
+  background: var(--status-occupied);
+}
+
+.terminal-body {
+  flex-grow: 1;
+  background: #040108;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #c4b9d8;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.log-line {
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.log-line.esp-tx {
+  border-left: 2px solid var(--accent-primary);
+  padding-left: 5px;
+  background: rgba(255, 107, 107, 0.03);
+}
+
+.log-time {
+  color: var(--text-muted);
+  margin-right: 6px;
+}
+
+.log-info { color: var(--status-available); }
+.log-warn { color: var(--accent-secondary); }
+.log-error { color: var(--status-occupied); }
+.log-esp { color: #a272ff; }
+
+/* SVG Chart Visualizer */
+.chart-container {
+  height: 140px;
+  margin-top: 15px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.chart-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  width: calc(100% / 12 - 4px);
+}
+
+.chart-bar {
+  width: 100%;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 4px 4px 0 0;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.chart-bar-wrapper:hover .chart-bar {
+  background: var(--accent-gradient);
+  box-shadow: 0 0 15px var(--accent-gradient-glow);
+  height: calc(var(--height) * 1.1) !important;
+}
+
+.chart-bar::after {
+  content: attr(data-val);
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-primary);
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.chart-bar-wrapper:hover .chart-bar::after {
+  opacity: 1;
+}
+
+.chart-bar-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-family: var(--font-mono);
+}
+
+/* Documentation Tabs */
+.docs-tabs-header {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.tab-btn.active {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.docs-content {
+  display: none;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.docs-content.active {
+  display: block;
+  animation: tab-fade 0.3s ease-in-out;
+}
+
+@keyframes tab-fade {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.docs-content h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 12px 0 6px;
+}
+
+.docs-content ul {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+
+.code-snippet-box {
+  background: #040108;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #d1c8e2;
+  overflow-x: auto;
+  margin-top: 8px;
+  max-height: 250px;
+  position: relative;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.code-copy-btn:hover {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+/* Modal Dialog */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(6, 2, 15, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition-smooth);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: linear-gradient(135deg, #160d2b 0%, #0a0414 100%);
+  border: 1px solid var(--panel-border-active);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  transform: scale(0.9);
+  transition: var(--transition-smooth);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255, 107, 107, 0.1);
+}
+
+.modal-overlay.active .modal-box {
+  transform: scale(1);
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-form-group {
+  margin-bottom: 16px;
+}
+
+.modal-form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.modal-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  color: #fff;
+  font-family: var(--font-main);
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--panel-border);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* Footer Section */
+footer {
+  margin-top: 50px;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+footer a:hover {
+  color: var(--accent-primary);
+}
+
+/* Responsive Scaling */
+@media (max-width: 1100px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  .metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .app-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+  .creator-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .project-stats-compact {
+    text-align: left;
+  }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+/* Smart Environmental & Solar Power Hub Innovations */
+.alarm-status-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  transition: var(--transition-smooth);
+}
+
+.alarm-status-badge.safe {
+  background: rgba(0, 245, 212, 0.1);
+  color: var(--status-available);
+  border: 1px solid rgba(0, 245, 212, 0.2);
+}
+
+.alarm-status-badge.warning {
+  background: rgba(255, 63, 129, 0.15);
+  color: var(--status-occupied);
+  border: 1px solid rgba(255, 63, 129, 0.25);
+  animation: alarm-glow-flash 1s infinite alternate;
+}
+
+@keyframes alarm-glow-flash {
+  0% { box-shadow: 0 0 4px var(--status-occupied-glow); }
+  100% { box-shadow: 0 0 16px var(--status-occupied); }
+}
+
+.fan-icon-wrapper.spinning svg {
+  fill: var(--status-available) !important;
+  animation: spin-fan 0.8s linear infinite;
+}
+
+@keyframes spin-fan {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#streetlight-led.active {
+  background: #FFF066 !important;
+  box-shadow: 0 0 12px #FFF066;
+}
+
+/* EV Charger Styling overlay on Grid */
+.ev-charging-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 245, 212, 0.15);
+  border: 1px solid var(--status-available);
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px var(--status-available-glow);
+}
+
+.ev-charging-badge svg {
+  width: 10px;
+  height: 10px;
+  fill: var(--status-available);
+}
+
+/* Battery fill transitions */
+.battery-shell {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* EV status label overlay inside the card */
+.ev-status-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--status-available);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Navigation Links styling */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  margin: 0 20px;
+}
+
+.nav-item {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.nav-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
+  color: #fff;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 12px var(--accent-gradient-glow);
+}
+
+/* CCTV Grid System */
+.cctv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .cctv-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cctv-camera-card {
+  position: relative;
+  background: #090514;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius-md);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.cctv-feed-overlay {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.cctv-cam-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.cctv-rec-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--status-occupied);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.rec-dot {
+  width: 7px;
+  height: 7px;
+  background-color: var(--status-occupied);
+  border-radius: 50%;
+  animation: pulse-dot-red 1s infinite alternate;
+}
+
+@keyframes pulse-dot-red {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; box-shadow: 0 0 8px var(--status-occupied); }
+}
+
+.cctv-timestamp {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Static Noise Effect overlay */
+.cctv-static-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.015) 0px,
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  animation: static-shift 12s linear infinite;
+  z-index: 2;
+}
+
+@keyframes static-shift {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+/* CCTV Scene visuals using CSS illustrations/drawings */
+.cctv-visual-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  filter: grayscale(1) sepia(0.2) hue-rotate(110deg) brightness(0.9); /* green-tint security cam look */
+  z-index: 1;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 245, 212, 0.25);
+  box-shadow: 0 0 8px var(--status-available);
+  animation: scan-vertical 5s linear infinite;
+  z-index: 3;
+}
+
+@keyframes scan-vertical {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* Facilities Cards layout */
+.facility-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-top: 30px;
+}
+
+@media (max-width: 900px) {
+  .facility-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .facility-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.facility-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.facility-card-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-primary);
+}
+
+.facility-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.facility-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.facility-features-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.facility-features-list li {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.facility-features-list li::before {
+  content: '✓';
+  color: var(--status-available);
+  font-weight: bold;
+}
+
+/* Active Sessions & Billing Tracker */
+.session-tracker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  transition: var(--transition-smooth);
+}
+
+.session-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.session-slot-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.session-slot-tag span.ev-badge {
+  font-size: 0.6rem;
+  background: rgba(0, 245, 212, 0.15);
+  color: var(--status-available);
+  border: 1px solid rgba(0, 245, 212, 0.3);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.session-plate-num {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.session-time-info {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.session-billing-info {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.session-cost {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+}
+
+.session-item-empty {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 24px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-md);
+}
+
+.payment-tabs .tab-btn {
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.payment-tabs .tab-btn.active {
+  border-bottom-color: var(--status-available);
+  color: #fff;
+}
+
+/* CCTV Surveillance Animation Keyframes */
+@keyframes blink {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+@keyframes gateRotateLoop {
+  0%, 100% { transform: rotate(0deg); }
+  35%, 65% { transform: rotate(-75deg); }
+}
+
+@keyframes cctvChargeFill {
+  0% { width: 0px; }
+  100% { width: 14px; }
+}
+
+
+
