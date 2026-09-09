@@ -154,21 +154,15 @@
       <span id="portal-error-msg" style="color:var(--status-occupied); font-size:0.75rem; font-weight:bold; display:none; text-align:center; margin-top:12px;">Invalid Credentials. Access Denied.</span>
     </div>
 
-    <!-- Protected Administration Desk Panel -->
     <div id="owner-dashboard-container" class="owner-layout-grid" style="display: none;">
       
-      <!-- Left Tab Selector Sidebar -->
       <div class="owner-sidebar-nav">
         <button class="owner-nav-btn active" id="btn-tab-report" onclick="switchOwnerTab('report')">📋 Operations Audits</button>
         <button class="owner-nav-btn" id="btn-tab-gate" onclick="switchOwnerTab('gate')">🚧 Exit Gate Control</button>
         <button class="owner-nav-btn" id="btn-tab-hw" onclick="switchOwnerTab('hw')">⚙️ Hardware Wiring</button>
         <button class="owner-nav-btn" onclick="portalLogout()" style="margin-top: 30px; border-color: var(--status-occupied); color: var(--status-occupied); background: rgba(255,23,68,0.02);">Logout Session</button>
       </div>
-
-      <!-- Tab Content Area -->
       <div class="owner-main-content">
-        
-        <!-- Tab 1: Daily Operations Report -->
         <div id="owner-tab-report" class="glass-card" style="padding: 30px;">
           <div class="card-title">
             <div class="card-title-icon">
@@ -198,7 +192,6 @@
           
           <button class="btn" onclick="downloadDailyReportPortal()" style="width:100%; padding:12px; font-size:0.88rem;">📥 Compile & Download Daily Audit Report (.txt)</button>
 
-          <!-- Active Booking Registry (Who booked where details) -->
           <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 25px;">
             <div class="card-title" style="margin-bottom: 15px;">
               <div class="card-title-icon">
@@ -219,14 +212,12 @@
                   </tr>
                 </thead>
                 <tbody id="owner-active-bookings-tbody">
-                  <!-- Filled dynamically by script -->
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- Tab 2: Exit Gate Control -->
         <div id="owner-tab-gate" class="glass-card" style="padding: 30px; display:none;">
           <div class="card-title" style="margin-bottom: 20px;">
             <div class="card-title-icon">
@@ -262,7 +253,6 @@
               </div>
             </div>
 
-            <!-- RFID Simulator -->
             <div style="background: rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.03); padding: 15px; border-radius: var(--border-radius-md); display:flex; flex-direction:column; justify-content:space-between;">
               <div class="rfid-graphic-box" id="rfid-sensor" onclick="triggerMockSwipe()">
                 <svg style="width:32px; height:32px; fill:var(--accent-primary); margin-bottom:5px;" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
@@ -275,7 +265,6 @@
             </div>
           </div>
 
-          <!-- RFID local database logs -->
           <div style="margin-top:25px;">
             <span style="font-size:0.8rem; font-weight:700; color:#fff; display:block; margin-bottom:8px;">RC522 RFID Card Swipes Database Log</span>
             <div style="max-height:120px; overflow-y:auto;">
@@ -301,7 +290,6 @@
           </div>
         </div>
 
-        <!-- Tab 3: Hardware Architecture setup (Only visible to owner) -->
         <div id="owner-tab-hw" class="glass-card" style="padding: 30px; display:none;">
           <div class="card-title" style="margin-bottom:15px;">
             <div class="card-title-icon">
@@ -363,8 +351,6 @@ void setup() {
       </div>
 
     </div>
-
-    <!-- Footer -->
     <footer style="margin-top:60px;">
       <p>Smart Car Parking System Platform &bull; Developed by Akshay Krishna, Bharath & Hari Haran &bull; &copy; 2026</p>
     </footer>
@@ -372,7 +358,6 @@ void setup() {
   </div>
 
   <script>
-    // Authentication accounts
     const ownerAccounts = [
       { id: "akshay_krishna", pass: "akshay123", name: "Akshay Krishna" },
       { id: "hari_haran", pass: "hari123", name: "Hari Haran" },
@@ -383,15 +368,12 @@ void setup() {
       applySessionState();
       syncRevenueDisplay();
       
-      // Setup live active bookings list
       renderActiveBookings();
       setInterval(renderActiveBookings, 2000);
       
-      // Setup live IST clock
       updateISTClock();
       setInterval(updateISTClock, 1000);
       
-      // Setup servo range listener
       const angleSlider = document.getElementById('servo-angle-slider');
       if (angleSlider) {
         angleSlider.addEventListener('input', (e) => {
@@ -431,8 +413,6 @@ void setup() {
       } else {
         authBlock.style.display = 'block';
         dashBlock.style.display = 'none';
-        
-        // Clear fields
         document.getElementById('owner-portal-user').value = '';
         document.getElementById('owner-portal-pass').value = '';
       }
@@ -445,17 +425,14 @@ void setup() {
     }
 
     function switchOwnerTab(tabId) {
-      // Hide all tabs
       document.getElementById('owner-tab-report').style.display = 'none';
       document.getElementById('owner-tab-gate').style.display = 'none';
       document.getElementById('owner-tab-hw').style.display = 'none';
 
-      // Remove active classes on nav buttons
       document.getElementById('btn-tab-report').classList.remove('active');
       document.getElementById('btn-tab-gate').classList.remove('active');
       document.getElementById('btn-tab-hw').classList.remove('active');
 
-      // Show selected tab and mark active button
       document.getElementById(`owner-tab-${tabId}`).style.display = 'block';
       document.getElementById(`btn-tab-${tabId}`).classList.add('active');
     }
@@ -516,7 +493,6 @@ Smart Parking Audit Bot
       document.body.removeChild(link);
     }
 
-    // SG90 Servo control mappings
     function setGateAngle(deg) {
       const gateArm = document.getElementById('gate-arm');
       const ledRed = document.getElementById('led-red');
@@ -560,7 +536,6 @@ Smart Parking Audit Bot
       }
     }
 
-    // RFID simulation
     function generateRandomRFID() {
       const chars = '0123456789ABCDEF';
       let uid = '';
@@ -602,12 +577,9 @@ Smart Parking Audit Bot
         setGateAngle(90);
         setTimeout(() => setGateAngle(0), 4000);
         
-        // Sync event to localStorage for dashboard logs
         localStorage.setItem('rfid_gate_swipe_event', `[RFID] Swiped tag UID: ${uid} in Owner Portal. Gate barrier cycle initiated.`);
       }, 800);
     }
-
-    // Active Reservations Registry Render
     function renderActiveBookings() {
       const tbody = document.getElementById('owner-active-bookings-tbody');
       if (!tbody) return;
@@ -642,7 +614,6 @@ Smart Parking Audit Bot
       });
     }
 
-    // IST Ticker Clock
     function updateISTClock() {
       const clockEl = document.getElementById('ist-clock');
       if (clockEl) {
